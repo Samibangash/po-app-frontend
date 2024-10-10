@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -7,25 +7,26 @@ import { ApiService } from 'src/app/services/api.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private api: ApiService) { }
 
+  ngOnInit(): void {
+    this.createForm();
+  }
   createForm() {
     this.loginForm = this.fb.group({
-      username: [''],
+      email: [''],
       password: ['']
     });
   }
+
   onSubmit() {
-    if (this.loginForm.valid) {
-      const formData = this.loginForm.value;
-      console.log('Form Data:', formData);
-      // Handle login logic here (e.g., call an API)
-    } else {
-      console.log('Form is invalid');
-    }
+    this.api.login(this.loginForm.value).subscribe(response=>{
+      console.log(response);
+      
+    });
   }
 
 }
