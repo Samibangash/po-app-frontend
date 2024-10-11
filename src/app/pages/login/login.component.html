@@ -1,21 +1,35 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <div class="mb-3">
-    <label for="email" class="form-label">Email:</label>
-    <input
-      type="email"
-      class="form-control"
-      id="email"
-      formControlName="email"
-    />
-  </div>
-  <div class="mb-3">
-    <label for="password" class="form-label">Password</label>
-    <input
-      type="password"
-      formControlName="password"
-      class="form-control"
-      id="password"
-    />
-  </div>
-  <button type="submit" class="btn btn-primary">Login</button>
-</form>
+<div class="container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-12 offset-sm-4 col-sm-3 mb-3">
+        <label for="email" class="form-label"><b>Email:</b></label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          formControlName="email"
+        />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 offset-sm-4 col-sm-3 mb-3">
+        <label for="password" class="form-label"><b>Password:</b></label>
+        <input
+          type="password"
+          formControlName="password"
+          class="form-control"
+          id="password"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 offset-sm-4 col-sm-3 mb-3">
+        <div class="d-grid justify-content-center">
+          <button type="submit" class="btn btn-success mb-1">Login</button>
+          <button type="submit" class="btn btn-success" routerLink="/register">Reister</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

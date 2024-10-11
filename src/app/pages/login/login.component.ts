@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { ApiService } from 'src/app/services/api.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private api: ApiService) { }
+  constructor(private fb: FormBuilder, private api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
     this.createForm();
@@ -23,9 +24,15 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.api.login(this.loginForm.value).subscribe(response=>{
+    this.api.login(this.loginForm.value).subscribe((response:any) => {
+      if(response.success){
+        localStorage.setItem("token",response.data.jwt);
+        localStorage.setItem("user",response.data.user);
+        this.router.navigate(['/dashboard']);
+      }else{
+        alert("Something went wrong")
+      }
       console.log(response);
-      
     });
   }
 
