@@ -11,7 +11,7 @@ import { ApiService } from 'src/app/services/api.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private api: ApiService, private router: Router) { }
+  constructor(private fb: FormBuilder, private api: ApiService, private router: Router) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -27,7 +27,8 @@ export class LoginComponent implements OnInit {
     this.api.login(this.loginForm.value).subscribe((response:any) => {
       if(response.success){
         localStorage.setItem("token",response.data.jwt);
-        localStorage.setItem("user",response.data.user);
+        localStorage.setItem("user",response.data.z);
+
         this.router.navigate(['/dashboard']);
       }else{
         alert("Something went wrong")
