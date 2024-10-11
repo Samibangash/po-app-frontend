@@ -6,12 +6,16 @@ import { ApiService } from 'src/app/services/api.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private api: ApiService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private api: ApiService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -19,22 +23,29 @@ export class LoginComponent implements OnInit {
   createForm() {
     this.loginForm = this.fb.group({
       username: [''],
-      password: ['']
+      password: [''],
     });
   }
 
   onSubmit() {
-    this.api.login(this.loginForm.value).subscribe((response:any) => {
-      if(response.success){
-        localStorage.setItem("token",response.data.jwt);
-        localStorage.setItem("user",response.data.z);
+    this.api.login(this.loginForm.value).subscribe((response: any) => {
+      if (response.success) {
+        // Store the JWT token and user data in local storage
+        localStorage.setItem('authToken', response.data.jwt);
+        localStorage.setItem('user', response.data.z);
 
-        this.router.navigate(['/dashboard']);
-      }else{
-        alert("Something went wrong")
+        // Redirect based on the user's role
+        if (response.data.user.role == 1) {
+          this.router.navigate(['/admin-layout']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      } else {
+        alert('Something went wrong');
       }
+
+      // Log the response for debugging purposes
       console.log(response);
     });
   }
-
 }

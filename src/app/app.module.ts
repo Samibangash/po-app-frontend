@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,9 +10,12 @@ import { UserComponent } from './layout/user/user.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { AuthInterceptor } from './auth.interceptor';
+import { CreatePoComponent } from './pages/create-po/create-po.component';
+import { NavbarComponent } from './navbar/navbar.component';
+
+import { AuthInterceptor } from './auth.interceptor'; // Your custom auth interceptor
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt'; // Import JWT services
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -19,21 +24,28 @@ import { AuthInterceptor } from './auth.interceptor';
     UserComponent,
     LoginComponent,
     RegisterComponent,
-    DashboardComponent
+    DashboardComponent,
+    CreatePoComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
+    NgbModule,
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
-    }
+
+      multi: true,
+    },
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, // Provide JwtHelperService options
+    JwtHelperService, // Include JwtHelperService in providers
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

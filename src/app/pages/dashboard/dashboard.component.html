@@ -1,1 +1,96 @@
-<h2 class="center">Dashboard</h2>
+<div class="container mt-5">
+  <h2>Pending Approvals</h2>
+
+  <!-- Pending Approvals Table -->
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th>PO Number</th>
+        <th>Description</th>
+        <th>Total Amount</th>
+        <th>Approval Workflows (Roles)</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let po of purchaseOrders">
+        <td>{{ po.poNumber }}</td>
+        <td>{{ po.description }}</td>
+        <td>{{ po.totalAmount | currency }}</td>
+        <td>
+          <ul class="list-unstyled">
+            <li *ngFor="let workflow of po.approvalWorkflows">
+              {{ workflow.roleName }} - {{ workflow.status }}
+            </li>
+          </ul>
+        </td>
+        <td>{{ po.status }}</td>
+        <td>
+          <!-- Approve Button based on user role and status -->
+          <button
+            class="btn btn-success mr-2"
+            *ngIf="
+              currentUserRole === 2 && po.status.includes('Pending Level 1')
+            "
+            (click)="approvePO(po.id)"
+          >
+            Approve
+          </button>
+          <button
+            class="btn btn-success mr-2"
+            *ngIf="
+              currentUserRole === 3 && po.status.includes('Pending Level 2')
+            "
+            (click)="approvePO(po.id)"
+          >
+            Approve
+          </button>
+          <button
+            class="btn btn-success mr-2"
+            *ngIf="
+              currentUserRole === 4 && po.status.includes('Pending Level 3')
+            "
+            (click)="approvePO(po.id)"
+          >
+            Approve
+          </button>
+
+          <!-- Reject Button based on user role and status -->
+          <button
+            class="btn btn-danger mr-2"
+            *ngIf="
+              currentUserRole === 2 && po.status.includes('Pending Level 1')
+            "
+            (click)="rejectPO(po.id)"
+          >
+            Reject
+          </button>
+          <button
+            class="btn btn-danger mr-2"
+            *ngIf="
+              currentUserRole === 3 && po.status.includes('Pending Level 2')
+            "
+            (click)="rejectPO(po.id)"
+          >
+            Reject
+          </button>
+          <button
+            class="btn btn-danger mr-2"
+            *ngIf="
+              currentUserRole === 4 && po.status.includes('Pending Level 3')
+            "
+            (click)="rejectPO(po.id)"
+          >
+            Reject
+          </button>
+
+          <!-- Generate PDF Button -->
+          <button class="btn btn-primary" (click)="generatePdf(po.id)">
+            Generate PDF
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

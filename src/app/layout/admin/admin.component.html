@@ -1,1 +1,129 @@
-<p>admin works!</p>
+<div class="admin-container">
+  <h2>Purchase Orders</h2>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>PO ID</th>
+        <th>Description</th>
+        <th>Total Amount</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let po of purchaseOrders">
+        <td>{{ po.id }}</td>
+        <td>{{ po.description }}</td>
+        <td>{{ po.totalAmount }}</td>
+        <td>{{ po.status }}</td>
+        <td>
+          <button
+            class="btn btn-info"
+            (click)="viewApprovalWorkflow(po.id, workflowModal)"
+          >
+            View Workflow
+          </button>
+          <button class="btn btn-success" (click)="approvePO(po.id)">
+            Approve
+          </button>
+          <button class="btn btn-danger" (click)="rejectPO(po.id)">
+            Reject
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal for viewing and submitting approval workflow -->
+<ng-template #workflowModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Approval Workflow</h5>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="teamLead">Level 1 (Team Lead):</label>
+      <!-- <select class="form-control" id="teamLead" [(ngModel)]="selectedTeamLead">
+        <option *ngFor="let user of teamLeadUsers" [value]="user.id">
+          {{ user.username }}
+        </option>
+      </select> -->
+
+      <select class="form-control" id="teamLead" [(ngModel)]="selectedTeamLead">
+        <option [ngValue]="null">Select a Team Lead</option>
+        <option *ngFor="let user of teamLeadUsers" [ngValue]="user.id">
+          {{ user.username }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="departmentManager">Level 2 (Department Manager):</label>
+      <!-- <select
+        class="form-control"
+        id="departmentManager"
+        [(ngModel)]="selectedDepartmentManager"
+      >
+        <option *ngFor="let user of departmentManagerUsers" [value]="user.id">
+          {{ user.username }}
+        </option>
+      </select> -->
+
+      <select
+        class="form-control"
+        id="departmentManager"
+        [(ngModel)]="selectedDepartmentManager"
+      >
+        <option [ngValue]="null">Select a Department Manager</option>
+        <option *ngFor="let user of departmentManagerUsers" [ngValue]="user.id">
+          {{ user.username }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="financeManager">Level 3 (Finance Manager):</label>
+      <!-- <select
+        class="form-control"
+        id="financeManager"
+        [(ngModel)]="selectedFinanceManager"
+      >
+        <option *ngFor="let user of financeManagerUsers" [value]="user.id">
+          {{ user.username }}
+        </option>
+      </select> -->
+      <select
+        class="form-control"
+        id="financeManager"
+        [(ngModel)]="selectedFinanceManager"
+      >
+        <option [ngValue]="null">Select a Finance Manager</option>
+        <option *ngFor="let user of financeManagerUsers" [ngValue]="user.id">
+          {{ user.username }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="closeWorkflowModal()"
+    >
+      Close
+    </button>
+    <button type="button" class="btn btn-primary" (click)="submitWorkflow()">
+      Submit Workflow
+    </button>
+  </div>
+</ng-template>
