@@ -1,14 +1,29 @@
 <div class="container">
+  <!-- Display error message for invalid login -->
+  <div *ngIf="errorMessage" class="alert alert-danger text-center">
+    {{ errorMessage }}
+  </div>
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="col-12 offset-sm-4 col-sm-3 mb-3">
-        <label for="email" class="form-label"><b>Email:</b></label>
+        <label for="username" class="form-label"><b>Username:</b></label>
         <input
-          type="username"
+          type="text"
           class="form-control"
           id="username"
           formControlName="username"
+          [ngClass]="{
+            'is-invalid': submitted && loginForm.controls['username'].errors
+          }"
         />
+        <div
+          *ngIf="submitted && loginForm.controls['username'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="loginForm.controls['username'].errors['required']">
+            Username is required
+          </div>
+        </div>
       </div>
     </div>
 
@@ -17,17 +32,31 @@
         <label for="password" class="form-label"><b>Password:</b></label>
         <input
           type="password"
-          formControlName="password"
           class="form-control"
           id="password"
+          formControlName="password"
+          [ngClass]="{
+            'is-invalid': submitted && loginForm.controls['password'].errors
+          }"
         />
+        <div
+          *ngIf="submitted && loginForm.controls['password'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="loginForm.controls['password'].errors['required']">
+            Password is required
+          </div>
+        </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-12 offset-sm-4 col-sm-3 mb-3">
         <div class="d-grid justify-content-center">
           <button type="submit" class="btn btn-success mb-1">Login</button>
-          <button type="submit" class="btn btn-success" routerLink="/register">Reister</button>
+          <button type="submit" class="btn btn-success" routerLink="/register">
+            Register
+          </button>
         </div>
       </div>
     </div>

@@ -19,16 +19,18 @@
             class="nav-link active"
             aria-current="page"
             [routerLink]="['/dashboard']"
-            >{{ currentUserRole }}</a
+            >Dashboard ({{ currentUserRole }})</a
           >
         </li>
-        <!-- Only show "Create PO" if the user has the appropriate role -->
+
+        <!-- Show "Create PO" if the user has the "User" role -->
         <li class="nav-item" *ngIf="currentUserRole === 'User'">
           <a class="nav-link" [routerLink]="['/create-po']">Create PO</a>
         </li>
       </ul>
-      <ul class="navbar-nav ml-auto">
-        <!-- Only show "Notifications" for roles 2, 3, 4 -->
+
+      <ul class="navbar-nav ms-auto">
+        <!-- Show "Notifications" for roles 2, 3, 4 -->
         <li
           class="nav-item"
           *ngIf="
@@ -37,8 +39,12 @@
             currentUserRole === 'Finance Manager'
           "
         >
-          <a class="nav-link" href="#">Notifications</a>
+          <a class="nav-link" [routerLink]="['/notifications']"
+            >Notifications</a
+          >
         </li>
+
+        <!-- Logout button -->
         <li class="nav-item">
           <a class="nav-link" (click)="logout()">Logout</a>
         </li>

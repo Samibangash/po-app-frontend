@@ -97,6 +97,10 @@ export class DashboardComponent implements OnInit {
     this.api.approveWorkflow(po.id).subscribe({
       next: (response) => {
         console.log('Workflow :', response);
+        if (response.responseStatus == 'Success') {
+          const userId = response.data.user.id;
+          this.fetchPendingApprovals(userId);
+        }
       },
       error: (error) => console.error('Error rejecting PO:', error),
     });
@@ -105,6 +109,10 @@ export class DashboardComponent implements OnInit {
   rejectPO(po: PurchaseOrder): void {
     this.api.rejectWorkflow(po.id).subscribe({
       next: (response) => {
+        if (response.responseStatus == 'Success') {
+          const userId = response.data.user.id;
+          this.fetchPendingApprovals(userId);
+        }
         console.log('Workflow rejected:', response);
       },
       error: (error) => console.error('Error rejecting PO:', error),
