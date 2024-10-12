@@ -1,27 +1,50 @@
-# PoAppFrontend
+### Frontend (Angular) README:
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.0.
+````markdown
+# Purchase Order Management System - Frontend
 
-## Development server
+This is the frontend of the Purchase Order Management System built using Angular. It provides a user interface for creating and approving Purchase Orders and interacting with the backend APIs.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Features
 
-## Code scaffolding
+- User authentication and JWT-based authorization
+- Role-based access control for different user roles
+- Create and approve Purchase Orders
+- Display pending approvals and approval history
+- Download Purchase Orders as PDFs
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Tech Stack
 
-## Build
+- Angular 16.x
+- Angular CLI 16.2.x
+- Bootstrap or Material UI for UI components (if used)
+- JWT for authentication (communicates with the backend)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Prerequisites
 
-## Running unit tests
+- Node.js 18.x
+- npm 8.x
+- Angular CLI 16.x
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Installation
 
-## Running end-to-end tests
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/po-management-system-frontend.git
+   cd po-management-system-frontend
+   ```
+````
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+2. Install dependencies:
 
-## Further help
+```bash
+npm install
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+3. Run the application
+
+```bash
+ng serve
+```
+
+4. Access the app at `bash http://localhost:4200 `
