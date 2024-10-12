@@ -56,8 +56,8 @@ ng serve
 
 ## Admin User
 
-- **Username:** `bash Admin`
-- **Password:** `bash password123`
+- **Username:** `Admin`
+- **Password:** `password123`
 
 ## Team Lead
 
