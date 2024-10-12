@@ -5,7 +5,7 @@ This is the frontend of the Purchase Order Management System built using Angular
 ## Features
 
 - User authentication and JWT-based authorization
-- Role-based access control for different user roles (Admin, Team Lead, Department Manager, Finance Manager, etc.)
+- Role-based access control for different user roles (Admin, Team Lead, Department Manager, Finance Manager,User etc.)
 - Create and approve Purchase Orders
 - Display pending approvals and approval history
 - Download Purchase Orders as PDFs
