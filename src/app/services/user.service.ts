@@ -23,11 +23,10 @@ export class UserService {
   getUsersByRole(roleId: number): Observable<User[]> {
     return this.http.get<any>(`${this.apiUrl}?role=${roleId}`).pipe(
       map((response) => {
-        // Extract data array from the response
         if (response && Array.isArray(response.data)) {
-          return response.data; // Return the array of users from 'data'
+          return response.data;
         } else {
-          return []; // Return an empty array if no users found
+          return [];
         }
       })
     );

@@ -63,9 +63,12 @@ export class AdminComponent implements OnInit {
               po.approvalWorkflows ?? [],
               po.status
             ),
+            adminStatus: po.status,
             approvalWorkflows: (po.approvalWorkflows ?? []).map(
               (workflow: any) => ({
-                roleName: this.getRoleName(workflow.user.role),
+                roleName: workflow.user?.role
+                  ? this.getRoleName(workflow.user.role)
+                  : 'Unknown', // Defensive check here
                 approvalLevel: workflow.approvalLevel,
                 status: workflow.status,
               })
@@ -81,14 +84,24 @@ export class AdminComponent implements OnInit {
 
   // Determine the current status based on the approval workflows
   getCurrentStatus(approvalWorkflows: any[], status: any): string {
-    const pendingWorkflow = approvalWorkflows.find(
-      (workflow) => workflow.status === 'Pending'
-    );
+    let pendingWorkflow = null;
+    approvalWorkflows.sort((a, b) => a.approvalLevel - b.approvalLevel);
+
+    approvalWorkflows.some((workflow) => {
+      console.log(workflow);
+
+      if (workflow.status === 'Pending') {
+        pendingWorkflow = workflow.approvalLevel;
+        return true;
+      }
+      return false;
+    });
+
     if (pendingWorkflow) {
-      const level = pendingWorkflow.approvalLevel;
+      const level = pendingWorkflow;
       return `Pending Level ${level} Approval`;
     }
-    return status;
+    return 'Pending';
   }
 
   // Map role ID to role name

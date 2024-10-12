@@ -10,7 +10,7 @@ import { CreatePoComponent } from './pages/create-po/create-po.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' }, // Default route
   { path: 'login', component: LoginComponent },
-  { path: 'user-layout', component: UserComponent }, // User-specific layout
+  { path: 'user-layout', component: UserComponent },
   { path: 'admin-layout', component: AdminComponent }, // Admin-specific layout
   { path: 'create-po', component: CreatePoComponent }, // Admin-specific layout
   { path: 'register', component: RegisterComponent },

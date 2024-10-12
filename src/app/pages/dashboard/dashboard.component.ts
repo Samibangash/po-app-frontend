@@ -1,7 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { ApiService } from 'src/app/services/api.service';
-import { AuthService } from 'src/app/services/auth.service'; // Correctly inject AuthService
-import { HttpResponse } from '@angular/common/http';
+import { AuthService } from 'src/app/services/auth.service';
+
+interface PurchaseOrder {
+  id: any;
+  poId: any;
+  description: string;
+  totalAmount: number;
+  submissionDate: string;
+  status: string;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -9,110 +18,97 @@ import { HttpResponse } from '@angular/common/http';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  purchaseOrders: any[] = [];
-  currentUserRole: number | null = null; // Store the current user's role
+  pendingPOs: PurchaseOrder[] = [];
+  poApprovalSteps = {
+    teamLeadApproved: false,
+    departmentManagerApproved: false,
+    financeManagerApproved: false,
+  };
 
   constructor(
-    private apiService: ApiService,
-    private authService: AuthService
+    private http: HttpClient,
+    private api: ApiService,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.fetchCurrentUserRole();
-    this.fetchPurchaseOrders();
+    const userId = this.getCurrentUserId(); // Replace with actual logic to get the current user's ID
+
+    this.fetchPendingApprovals(userId);
   }
 
-  fetchCurrentUserRole() {
-    // Use the AuthService to get the current user
-    this.authService.getCurrentUser().subscribe({
-      next: (user) => {
-        if (user) {
-          console.log('asdfasd');
+  getCurrentUserId(): any {
+    const userId = this.auth.getCurrentUserId();
 
-          this.currentUserRole = user.roleId; // Set the current user's role
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching current user:', error);
-      },
-    });
+    return userId;
   }
 
-  fetchPurchaseOrders() {
-    this.apiService.getPurchaseOrders().subscribe({
-      next: (response: any) => {
-        if (response.responseStatus === 'Success') {
-          this.purchaseOrders = response.data.map((po: any) => ({
-            id: po.id,
-            poNumber: po.poNumber,
-            description: po.description,
-            totalAmount: po.totalAmount,
-            status: this.getCurrentStatus(po.approvalWorkflows ?? [], po), // Ensure approvalWorkflows is an array
-            approvalWorkflows: (po.approvalWorkflows ?? []).map(
-              (workflow: any) => ({
-                roleName: this.getRoleName(workflow.user.role),
-                approvalLevel: workflow.approvalLevel,
-                status: workflow.status,
-              })
-            ),
+  fetchPendingApprovals(userId: number): void {
+    this.api.fetchPendingApprovals(userId).subscribe((response: any) => {
+      if (response.success && response.data) {
+        console.log('resp', response.data);
+        this.pendingPOs = response.data
+          .filter((item: any) => item.status === 'Pending')
+          .map((item: any) => ({
+            id: item.id,
+            poId: item.purchaseOrder.id,
+            description: `Approval Level ${item.approvalLevel}`,
+            totalAmount: 0,
+            submissionDate: '',
+            status: item.status,
           }));
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching POs:', error);
-      },
+        this.setApprovalSteps(response.data);
+      }
     });
   }
 
-  getCurrentStatus(approvalWorkflows: any[], po: any): string {
-    const pendingWorkflow = approvalWorkflows.find(
-      (workflow) => workflow.status === 'Pending'
+  setApprovalSteps(data: any[]): void {
+    const teamLeadApproval = data.find((d) => d.user.roleName === 'Team Lead');
+    const departmentManagerApproval = data.find(
+      (d) => d.user.roleName === 'Department Manager'
     );
-    if (pendingWorkflow) {
-      const level = pendingWorkflow.approvalLevel;
-      return `Pending Level ${level} Approval`;
-    }
-    return po.status;
+    const financeManagerApproval = data.find(
+      (d) => d.user.roleName === 'Finance Manager'
+    );
+
+    this.poApprovalSteps.teamLeadApproved =
+      teamLeadApproval?.status === 'Approved';
+    this.poApprovalSteps.departmentManagerApproved =
+      departmentManagerApproval?.status === 'Approved';
+    this.poApprovalSteps.financeManagerApproved =
+      financeManagerApproval?.status === 'Approved';
   }
 
-  getRoleName(roleId: string): string {
-    switch (roleId) {
-      case '2':
-        return 'Team Lead';
-      case '3':
-        return 'Department Manager';
-      case '4':
-        return 'Finance Manager';
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Approved':
+        return 'approved';
+      case 'Rejected':
+        return 'rejected';
+      case 'Pending':
+        return 'pending';
       default:
-        return 'Unknown Role';
+        return '';
     }
   }
 
-  approvePO(poNumber: string) {
-    console.log(`Approving PO: ${poNumber}`);
-    // Implement the API call to approve the PO here
-  }
-
-  rejectPO(poNumber: string) {
-    console.log(`Rejecting PO: ${poNumber}`);
-    // Implement the API call to reject the PO here
-  }
-
-  generatePdf(id: string) {
-    this.apiService.generatePdf(id).subscribe({
-      next: (response: HttpResponse<Blob>) => {
-        const blob = new Blob([response.body!], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `PO-${id}.pdf`; // Downloaded PDF name
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+  approvePO(po: PurchaseOrder): void {
+    console.log('po', po.poId);
+    this.api.approveWorkflow(po.id).subscribe({
+      next: (response) => {
+        console.log('Workflow :', response);
       },
-      error: (error) => {
-        console.error(`Error generating PDF for PO ${id}`, error);
-      },
+      error: (error) => console.error('Error rejecting PO:', error),
     });
+  }
+
+  rejectPO(po: PurchaseOrder): void {
+    this.api.rejectWorkflow(po.id).subscribe({
+      next: (response) => {
+        console.log('Workflow rejected:', response);
+      },
+      error: (error) => console.error('Error rejecting PO:', error),
+    });
+    po.status = 'Rejected';
   }
 }

@@ -37,6 +37,8 @@ export class LoginComponent implements OnInit {
         // Redirect based on the user's role
         if (response.data.user.role == 1) {
           this.router.navigate(['/admin-layout']);
+        } else if (response.data.user.role == 5) {
+          this.router.navigate(['/user-layout']);
         } else {
           this.router.navigate(['/dashboard']);
         }

@@ -55,10 +55,23 @@ export class AuthService {
     return of(null); // Return null if no valid token
   }
 
-  // Fetch users based on role IDs
-  // getUsersByRoles(roleIds: number[]): Observable<any> {
-  //   console.log('ppppppppp', roleIds);
+  getCurrentUserId(): number | null {
+    const token = localStorage.getItem('authToken'); // Retrieve the token
+    if (token) {
+      const decodedToken = this.jwtHelper.decodeToken(token);
+      console.log('Decoded Token:', decodedToken); // Log the entire token to check the structure
 
-  //   return this.http.post('http://localhost:8080/api/auth/users', { roleIds });
-  // }
+      // Check if 'id' exists and is a valid number
+      const userId = decodedToken?.id || null;
+
+      if (userId !== null && typeof userId === 'number') {
+        console.log('User ID:', userId);
+        return userId;
+      } else {
+        console.error('User ID is not valid or not found in the token');
+        return null;
+      }
+    }
+    return null; // Return null if no valid token
+  }
 }

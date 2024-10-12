@@ -28,7 +28,15 @@
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
+        <!-- Only show "Notifications" for roles 2, 3, 4 -->
+        <li
+          class="nav-item"
+          *ngIf="
+            currentUserRole === 'Team Lead' ||
+            currentUserRole === 'Department Manager' ||
+            currentUserRole === 'Finance Manager'
+          "
+        >
           <a class="nav-link" href="#">Notifications</a>
         </li>
         <li class="nav-item">
