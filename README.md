@@ -51,3 +51,25 @@ ng serve
 ```
 
 4. Access the app at `bash http://localhost:4200 `
+
+# Default Credentials
+
+## Admin User
+
+- **Username:** `bash Admin`
+- **Password:** `bash password123`
+
+## Team Lead
+
+- **Username:** `team_lead`
+- **Password:** `password123`
+
+## Department Manager
+
+- **Username:** `department_manager`
+- **Password:** `password123`
+
+## Finance Manager
+
+- **Username:** `finance_manager`
+- **Password:** `password123`

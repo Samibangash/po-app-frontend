@@ -53,7 +53,7 @@ export class ApiService {
   // Register method with Authorization header
   register(data: any): Observable<any> {
     return this.http
-      .post(this.baseURL + 'auth/register', data, this.getHttpOptions()) // Send request with token (if available)
+      .post(this.baseURL + 'auth/register', data) // Send request with token (if available)
       .pipe(
         catchError((error) => {
           console.error('Register API error:', error);

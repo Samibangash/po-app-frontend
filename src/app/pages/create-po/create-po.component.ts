@@ -9,56 +9,71 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./create-po.component.scss'],
 })
 export class CreatePoComponent implements OnInit {
-  createPoForm!: FormGroup;
+  createPoForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
     private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.createForm();
-    this.addItem(); // Automatically add one item on form load
-  }
-
-  // Create form with dynamic items array
-  createForm() {
+  ) {
     this.createPoForm = this.fb.group({
       description: ['', Validators.required],
-      totalAmount: ['', [Validators.required, Validators.min(0)]],
-      items: this.fb.array([]), // Array to store multiple items
+      totalAmount: [{ value: 0 }],
+      items: this.fb.array([]),
     });
   }
 
-  // Get items array as a FormArray
+  ngOnInit(): void {
+    this.addItem(); // Add initial item row
+    this.items.valueChanges.subscribe(() => this.updateTotalAmount());
+  }
+
+  // Getter for the items form array
   get items(): FormArray {
     return this.createPoForm.get('items') as FormArray;
   }
 
-  // Add a new item to the items array
-  addItem() {
-    const itemForm = this.fb.group({
+  // Method to create a new item form group
+  newItem(): FormGroup {
+    return this.fb.group({
       itemName: ['', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: [0, [Validators.required, Validators.min(0)]],
     });
-    this.items.push(itemForm);
   }
 
-  // Remove an item from the items array
-  removeItem(index: number) {
+  // Method to add a new item to the items form array
+  addItem(): void {
+    this.items.push(this.newItem());
+  }
+
+  // Method to remove an item from the items form array
+  removeItem(index: number): void {
     this.items.removeAt(index);
+    this.updateTotalAmount(); // Recalculate total when an item is removed
   }
 
-  // Submit the form
-  onSubmit() {
+  // Method to calculate the total amount based on quantity and price of each item
+  updateTotalAmount(): void {
+    const total = this.items.controls.reduce((sum, control) => {
+      const quantity = control.get('quantity')?.value || 0;
+      const price = control.get('price')?.value || 0;
+      return sum + quantity * price;
+    }, 0);
+
+    // Update the totalAmount control
+    this.createPoForm.get('totalAmount')?.setValue(total);
+  }
+
+  onSubmit(): void {
     if (this.createPoForm.valid) {
       console.log(this.createPoForm.value);
       this.api.createPo(this.createPoForm.value).subscribe(
         (response) => {
-          console.log('PO created successfully', response);
-          this.router.navigate(['/po-list']); // Navigate to the PO list or dashboard
+          if (response.success) {
+            console.log('PO created successfully', response);
+            this.router.navigate(['/user-layout']);
+          }
         },
         (error) => {
           console.error('Error creating PO', error);

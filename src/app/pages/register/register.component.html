@@ -2,12 +2,12 @@
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="col-12 offset-sm-4 col-sm-3 mb-3">
-        <label for="email" class="form-label"><b>Email:</b></label>
+        <label for="username" class="form-label"><b>Username:</b></label>
         <input
-          type="email"
+          type="text"
           class="form-control"
-          id="email"
-          formControlName="email"
+          id="username"
+          formControlName="username"
         />
       </div>
     </div>
@@ -23,6 +23,26 @@
         />
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-12 offset-sm-4 col-sm-3 mb-3">
+        <label for="role" class="form-label"><b>Select Role:</b></label>
+        <select class="form-control" formControlName="role">
+          <option value="2">Team Lead</option>
+          <option value="3">Department Manager</option>
+          <option value="4">Finance Manager</option>
+          <option value="5">User</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Error Message Display -->
+    <div *ngIf="errorMessage" class="row">
+      <div class="col-12 offset-sm-4 col-sm-3 mb-3">
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-12 offset-sm-4 col-sm-3 mb-3">
         <div class="d-grid justify-content-center">

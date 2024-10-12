@@ -28,8 +28,10 @@
             </div>
             <div class="card-body">
               <p><strong>Description:</strong> {{ po.description }}</p>
-              <p><strong>Total Amount:</strong> ${{ po.totalAmount }}</p>
-              <p><strong>Date Submitted:</strong> {{ po.submissionDate }}</p>
+              <p><strong>Work Status:</strong> {{ po.approveStatus }}</p>
+              <p><strong>Total Amount:</strong> {{ po.totalAmount }}</p>
+              <p><strong>userName:</strong> {{ po.userName }}</p>
+              <p><strong>Status:</strong> {{ po.status }}</p>
             </div>
             <div class="card-footer d-flex justify-content-between">
               <button class="btn btn-success" (click)="approvePO(po)">

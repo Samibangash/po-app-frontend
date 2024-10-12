@@ -10,6 +10,8 @@ interface PurchaseOrder {
   totalAmount: number;
   submissionDate: string;
   status: string;
+  approveStatus: string; // Add this
+  userName: string; // Add this
 }
 
 @Component({
@@ -53,8 +55,9 @@ export class DashboardComponent implements OnInit {
             id: item.id,
             poId: item.purchaseOrder.id,
             description: `Approval Level ${item.approvalLevel}`,
-            totalAmount: 0,
-            submissionDate: '',
+            approveStatus: item.approvalLevel,
+            totalAmount: item.purchaseOrder.totalAmount,
+            userName: item.user.username,
             status: item.status,
           }));
         this.setApprovalSteps(response.data);
